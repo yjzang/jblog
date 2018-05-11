@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userDB">
+
+
+<insert id="insert" parameterType="userVO" >      
+	<![CDATA[
+	insert into users
+	values(seq_users_no.nextval,#{id},#{username},#{password},sysdate)	
+       ]]>
+</insert>
+
+
+<insert id="insert_blog" parameterType="userVO" >      
+	<![CDATA[
+			insert into blog
+			values(#{id},concat(#{username},'의 블로그 입니다.'),null)	
+      ]]> 
+</insert>
+
+
+<insert id="insert_cate" parameterType="userVO" >      
+	<![CDATA[
+			insert into category
+			values(seq_category_no.nextval,#{id},'미분류','기본으로 만들어지는 카테고리입니다.',sysdate)	
+      ]]>
+</insert>
+
+
+<select id="getAuth"  parameterType="userVO" resultType="userVO">
+	<![CDATA[
+	select userno,id,username
+	from users 
+	where id=#{id} and password=#{password}
+    ]]>
+
+</select>
+
+<select id="getUser"  parameterType="string" resultType="userVO">
+
+	select userno,id,username
+	from users 
+	where id=#{id}
+
+</select>
+
+<select id="idCheck"  parameterType="String" resultType="string">
+	<![CDATA[
+	select userno
+	from users 
+	where id=#{id} 
+    ]]>
+
+</select>
+
+
+
+</mapper>

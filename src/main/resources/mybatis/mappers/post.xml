@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="postDB">
+
+
+<insert id="insert" parameterType="postVO" >      
+	<![CDATA[
+		insert into post
+		values(seq_users_no.nextval,#{cateNo},#{postTitle},#{postContent},sysdate)	
+    ]]>
+</insert>
+
+
+<select id="getPostList" parameterType="postVO" resultMap="resultMapList">
+
+	select postno,posttitle,to_char(regdate,'yyyy/mm/dd') regdate
+	from post
+	where cateno = #{cateNo}
+	order by regdate desc
+
+</select>
+
+<select id="getPost" parameterType="postVO" resultMap="resultMapList">
+
+	select postno,posttitle,postcontent
+	from post
+	where postno = #{postNo}
+
+</select>
+
+<resultMap type="postVO" id="resultMapList">
+	<result column="postno" property="postNo"/>
+	<result column="cateno" property="cateNo"/>
+	<result column="postTitle" property="postTitle"/>
+	<result column="postContent" property="postContent"/>
+	<result column="regdate" property="regDate"/>
+</resultMap>
+
+
+</mapper>

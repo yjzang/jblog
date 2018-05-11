@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cateDB">
+
+<select id="getList"  resultMap="resultMapList"> 
+	<![CDATA[
+		select cateno,id,catename,description,regdate 
+		from category
+		where id=#{id}
+		order by regdate desc
+        ]]>
+</select>
+
+
+<insert id="insert" parameterType="cateVO" >      
+	<selectKey keyProperty="cateNo" resultType="string" order="BEFORE">  
+		select seq_category_no.nextval FROM dual
+	 </selectKey>
+	
+	<![CDATA[
+	insert into category
+	values(#{cateNo},#{id},#{cateName},#{desc},sysdate)	
+       ]]>
+       
+</insert>
+
+<select id="getCatebyNo"  parameterType="string" resultMap="resultMapList"> <!-- vo를 받아다가 알아서 list를 만든다 -->
+	<![CDATA[
+		select cateno,id,catename,description,regdate 
+		from category
+		where cateno= #{cateNo}
+		order by regdate desc
+		
+        ]]>
+</select>
+
+<select id="countPost" parameterType="cateVO" resultType="string">
+	select count(*)
+	from post
+	where cateno=#{cateNo}	
+
+</select>
+
+<resultMap type="cateVO" id="resultMapList">
+	<result column="cateno" property="cateNo"/>
+	<result column="id" property="id"/>
+	<result column="catename" property="cateName"/>
+	<result column="description" property="desc"/>
+	<result column="regdate" property="regDate"/>
+</resultMap>
+
+<delete id="delete" parameterType="cateVO">
+	<![CDATA[
+		delete 
+		from category
+		where cateno=#{cateNo}
+	]]>
+</delete>
+
+</mapper>
