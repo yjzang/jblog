@@ -4,16 +4,18 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.apache.ibatis.io.ResolverUtil.IsA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javaex.dao.BlogDAO;
+import com.javaex.dao.UserDAO;
 import com.javaex.vo.BlogVO;
+import com.javaex.vo.UserVO;
 
 @Service
 public class BlogService {
@@ -21,7 +23,8 @@ public class BlogService {
 	
 	@Autowired
 	BlogDAO dao;
-	
+	@Autowired
+	UserDAO userDAO;
 	
 	public BlogVO getBasic(String id) {
 		BlogVO vo =  dao.getBasic(id);
@@ -91,6 +94,42 @@ public class BlogService {
 			dao.restore(vo);
 	  }
 		
+	}
+	
+	public ArrayList<BlogVO> getBasicByKeyword(HashMap<String,String> map) {
+		
+		String keyword = map.get("keyword");
+		String which = map.get("which");
+		ArrayList<BlogVO> list = new ArrayList<BlogVO>();
+		BlogVO vo = new BlogVO(); 
+				
+		if("blog-title".equals(which)) {
+			vo.setBlogtitle(keyword);
+			list = (ArrayList<BlogVO>)dao.getBasicByKeyword(vo);	
+			for(BlogVO blogVO : list) {
+				 
+				String id = blogVO.getId();
+				UserVO userVO=userDAO.getUser(id);
+				blogVO.setUsername(userVO.getUsername());
+			}
+		} else if ("blog-user".equals(which)) {
+			
+			vo.setId(keyword);
+			list = (ArrayList<BlogVO>)dao.getBasicByKeyword(vo);
+			for(BlogVO blogVO : list) {
+				 
+				String id = blogVO.getId();
+				UserVO userVO=userDAO.getUser(id);
+				blogVO.setUsername(userVO.getUsername());
+			}
+			
+		} else {
+			
+			
+			 
+		}
+		
+		return list;
 	}
 	
 

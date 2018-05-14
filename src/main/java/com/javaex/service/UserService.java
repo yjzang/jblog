@@ -35,7 +35,6 @@ public class UserService {
 	public UserVO getUser(String id) {
 		
 		UserVO resultVO = dao.getUser(id);
-		System.out.println(resultVO.toString());
 		return resultVO;
 	}
 	

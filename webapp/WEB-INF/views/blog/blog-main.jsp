@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>JBlog</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
-<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.12.4.js"></script>
 </head>
 <style type="text/css">
 
@@ -35,6 +35,8 @@
 				</div>
 				<br><br><br>
 				<div>
+					
+					 <input type="hidden" id="authNo" value="${authVO.userno}">
 					 <input type="hidden" id="postNo_hdn">
 					 <table id="cmt_tbl" style="border: 1px #538aef solid; width:86%; margin:10px; ">
 		                <tr >
@@ -51,32 +53,11 @@
 		                    </td>
 		                    
 		                </tr>
-		                 
-		                 <tr align="center" style ="border: 1px #538aef solid;">
-		                    <td style=" width:10%; padding:5px;">이 름</td>
-		                    <td style=" width:65%; padding:5px;">
-		                        <pre style="font-size: 13px">내   용</pre>
-		                    </td>
-		                    <td  style=" width:20%; padding:5px;">날 짜</td>
-		                    <td  style=" width:5%; padding:5px;"><img src="${pageContext.request.contextPath }/assets/images/delete.jpg"></td>
-		                </tr>
-		                  <tr align="center" style ="border: 1px #538aef solid;">
-		                    <td style=" width:10%; padding:5px;">이 름</td>
-		                    <td style=" width:65%; padding:5px;">
-		                        <pre style="font-size: 13px">내   용</pre>
-		                    </td>
-		                    <td  style=" width:20%; padding:5px;">날 짜</td>
-		                    <td  style=" width:5%; padding:5px;"><img src="${pageContext.request.contextPath }/assets/images/delete.jpg"></td>
-		                </tr>
-		                  <tr align="center" style ="border: 1px #538aef solid;">
-		                    <td style=" width:10%; padding:5px;">이 름</td>
-		                    <td style=" width:65%; padding:5px;">
-		                        <pre style="font-size: 13px">내   용</pre>
-		                    </td>
-		                    <td  style=" width:20%; padding:5px;">날 짜</td>
-		                    <td  style=" width:5%; padding:5px;"><img src="${pageContext.request.contextPath }/assets/images/delete.jpg"></td>
-		                </tr>
-		                
+		           	</table>
+		           	
+		           
+		            <table id="cmt-list" style="border: 1px #538aef solid; width:86%; margin:10px; ">
+		            
 		            </table>
 		
 		           
@@ -128,11 +109,13 @@
 	$(document).ready(function(){
 		var cateNo =  ${cateList[0].cateNo};
 		fetchPostList(cateNo);
-		fetchCmtList(postNo);
+	
+		
 		
 	});
 		
 
+	
 	
  	$("ul").on("click",".cateName",function(){
  		
@@ -168,6 +151,8 @@
 									"<h4>등록된 글이 없습니다.</h4><p></p>"
 									) ;
 							 $(".blog-list").attr("style","");
+							 $("#cmt_tbl").hide(0);
+							 $("#cmt-list").hide(0);
 							/*  $("#cmt_tbl").empty();
 							 $("#cmt_tbl").attr("style",""); */
 					  	 } else{
@@ -179,7 +164,8 @@
 							
 								  });
 							 fetchPost(list[0].postNo);
-								
+							 $("#cmt_tbl").show(0);
+							 $("#cmt-list").show(0);		
 							 $(".blog-list").attr("style","border:1.5px dashed #538aef;width:80%;"
 							  						+"padding:20px; position:relative; bottom: 20px;") ;
 							  
@@ -219,6 +205,7 @@
 		$("[data-postno='"+postNo+"']").css("font-weight", "bold" );
  		console.log("포스트넘버 페치포스트"+postNo);
  		$("#postNo_hdn").val(postNo);
+ 		fetchCmtList(postNo);
 
  		$.ajax({
  			  
@@ -248,10 +235,51 @@
  		}
  	
  	
+
+	function fetchCmtList(postNo){
+		
+		$("#cmt-list").empty();
+		console.log("포스트넘버"+postNo);
+		
+
+		$.ajax({
+			  
+			  url : "${pageContext.request.contextPath}/${vo.id}/cmt/getList",
+			  type : "POST",
+			  data : {postNo: postNo},
+			  dataType : "json",
+			
+			  success : function(list){
+				  
+				  	if(list.length==0){
+				  		console.log("코멘트가 한개도 없음");
+					
+				  	 } else{
+				  	
+						 $.each(list, function(idx, val) {
+							console.log(idx + " " + val.cmtNo);
+							render_cmt(val,"down");
+						
+							  });
+						  
+				  	 }
+				 
+				  
+			 }, 
+			 
+			  error : function(XHR, status, error){
+				  
+					console.error(XHR+status+error);
+			  }
+			  
+	 	 });
+	 		 }
+ 	
+ 	
  	function render_postList(vo,updown){
 	 		  str= " ";
 	 		  str+= "	<li style='width:100%;cursor:pointer;' data-postno="+vo.postNo+" class='postTitle' >";
-	 		  str+= "	<a>"+vo.postTitle+"</a> ";
+	 		  str+= "	<a>"+vo.postTitle+" ("+vo.cmtCount+")</a> ";
 	 		  str+= "	<span>"+vo.regDate+"</span>";
 	 		  str+= "	</li>";
 	 		  str+= "	";
@@ -287,7 +315,7 @@
  		
  		var postNo= $("#postNo_hdn").val();
  		var cmtContent = $("#cmtContent").val();
- 		var writerId = ${authVO.id};
+ 		var writerId = '${authVO.id}';
  		
  		$.ajax({
 			  
@@ -296,14 +324,10 @@
 			  data : {postNo: postNo,cmtContent:cmtContent,writerId:writerId},
 			  dataType : "json",
 			
-			  success : function(list){
+			  success : function(vo){
 				  
-				  
-	 				  $.each(list, function(idx, val) {
-							console.log(idx + " " + val.postNo);
-							render_post(val);
-								  
-							  });
+						 render_cmt(vo,"up");
+				  	 
 			  },
 			  
 			  error : function(XHR, status, error){
@@ -317,5 +341,84 @@
  	
  	
  	
+ 	
+ 	function render_cmt(vo,updown){
+ 		
+ 	
+		  str= " ";
+		  str+= "	 <tr id='cmt_"+vo.cmtNo+"' align='center' style ='border: 1px #538aef solid;'>";
+		  str+= "	  <td style=' width:10%; padding:5px;'>"+vo.userName+"</td> ";
+		  str+= "	<td style=' width:65%; padding:5px;'>";
+		  str+= "	<pre style='font-size: 13px;text-align:left;'>"+vo.cmtContent+"</pre>";
+		  str+= "	</td>";
+		  str+= "	<td  style=' width:20%; padding:5px;'>"+vo.regDate+"</td>";
+		  str+= "	<td  style=' width:5%; padding:5px;cursor:pointer;'><img data-cmtno="+vo.cmtNo+" id='cmt_del' src='${pageContext.request.contextPath}/assets/images/delete.jpg'></td>";
+		  str+= "	</tr>";
+		  str+= "   ";
+		  str+= "	";
+		  
+		  if(updown=="up"){
+			  
+			  $("#cmt-list").prepend(str);
+			  
+		  } else{
+			  
+			  $("#cmt-list").append(str);
+		
+		  }
+		  
+		  var authNo = $("#authNo").val();
+		  if(authNo!=null){
+			  if(vo.userNo==authNo){
+				  $("[data-cmtno="+vo.cmtNo+"]").show();
+			  } else{
+				  $("[data-cmtno="+vo.cmtNo+"]").hide();
+			  }
+		  } else{
+			  $("[data-cmtno="+vo.cmtNo+"]").hide();
+		  }
+	}
+
+ 	
+	$("table").on("click","#cmt_del",function(){
+ 		
+ 		var cmtNo=$(this).data("cmtno");
+ 		console.log(cmtNo);
+ 		console.log("클릭은 됨");
+ 		
+ 		$.ajax({
+			  
+			  url : "${pageContext.request.contextPath}/${vo.id}/cmt/delete",
+			  type : "POST",
+			  data : {cmtNo: cmtNo},
+			  dataType : "json",
+			
+			  success : function(result){
+				  		
+				  		if(result=="true"){
+				  			
+				  			remove(cmtNo);
+				  		}
+						
+				  	 
+			  },
+			  
+			  error : function(XHR, status, error){
+				  
+				 console.error(XHR+status+error);
+				 
+			  }
+			  
+			  });
+ 	});
+	
+	
+	function remove(cmtNo){
+		
+		  $("#cmt_"+cmtNo).remove();
+		  
+	}
+ 	
+ 
 </script>
 </html>

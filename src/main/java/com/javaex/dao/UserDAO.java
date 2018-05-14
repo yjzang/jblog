@@ -42,9 +42,15 @@ public class UserDAO {
 	public UserVO getUser(String id) {
 		
 		 UserVO resultVO = sqlSession.selectOne("userDB.getUser",id);
-		 System.out.println(resultVO.toString());
 		 return resultVO;
 	}
+	
+	public UserVO getUserbyNo(String userNo) {
+		
+		 UserVO resultVO = sqlSession.selectOne("userDB.getUserbyNo",userNo);
+		 return resultVO;
+	}
+	
 
 	public String idCheck (String id) {
 		

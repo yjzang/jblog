@@ -1,6 +1,8 @@
 package com.javaex.dao;
 
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,5 +27,13 @@ public class BlogDAO {
 		return vo;
 		
 	}
+	
+	public List<BlogVO> getBasicByKeyword(BlogVO vo) {
+		
+		List<BlogVO> list =  sqlSession.selectList("blogDB.getBasicByKeyword",vo);
+		return list;
+		
+	}
+	
 	
 }

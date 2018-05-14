@@ -44,7 +44,13 @@
 	where id=#{id}
 
 </select>
+<select id="getUserbyNo"  parameterType="string" resultType="userVO">
 
+	select userno,id,username
+	from users 
+	where userno=#{userNo}
+
+</select>
 <select id="idCheck"  parameterType="String" resultType="string">
 	<![CDATA[
 	select userno

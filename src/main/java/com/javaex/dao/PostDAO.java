@@ -29,4 +29,6 @@ public class PostDAO {
 		
 		return sqlSession.selectList("postDB.getPost",vo);
 	}
+	
+	
 }

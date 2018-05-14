@@ -20,12 +20,26 @@
 </update>
 
 <select id="getBasic" parameterType="String" resultType="blogVO">
-<![CDATA[
+
 		select *
 		from blog  
-		where id= #{id}
- ]]>
+	    where id= #{id}
+	
 </select>
+
+<select id="getBasicByKeyword" parameterType="blogVO" resultType="blogVO">
+
+		select *
+		from blog  
+	    <if test="blogtitle != null">
+	    	where blogtitle like '%'||#{blogtitle}||'%'
+	 	</if>
+		<if test="id != null">
+			where id like '%'||#{id}||'%'
+	 	</if>
+
+</select>
+
 
 
 

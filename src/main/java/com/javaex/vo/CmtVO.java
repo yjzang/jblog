@@ -6,9 +6,18 @@ public class CmtVO {
 	String postNo;
 	String userNo;
 	String cmtContent;
-	String regdate;
+	String regDate;
+	String userName;
 
 	
+	
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	public String getCmtNo() {
 		return cmtNo;
 	}
@@ -33,18 +42,18 @@ public class CmtVO {
 	public void setCmtContent(String cmtContent) {
 		this.cmtContent = cmtContent;
 	}
-	public String getRegdate() {
-		return regdate;
+	public String getRegDate() {
+		return regDate;
 	}
-	public void setRegdate(String regdate) {
-		this.regdate = regdate;
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
-	
 	@Override
 	public String toString() {
 		return "CmtVO [cmtNo=" + cmtNo + ", postNo=" + postNo + ", userNo=" + userNo + ", cmtContent=" + cmtContent
-				+ ", regdate=" + regdate + "]";
+				+ ", regDate=" + regDate + "]";
 	}
+	
 	
 	
 	

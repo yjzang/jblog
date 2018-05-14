@@ -9,9 +9,17 @@ public class PostVO {
 	String postContent;
 	String regDate;
 	String flag;
+	String cmtCount;
 	
 	
 	
+	
+	public String getCmtCount() {
+		return cmtCount;
+	}
+	public void setCmtCount(String cmtCount) {
+		this.cmtCount = cmtCount;
+	}
 	public String getFlag() {
 		return flag;
 	}

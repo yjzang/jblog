@@ -1,12 +1,12 @@
 package com.javaex.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.javaex.dao.CateDAO;
+import com.javaex.dao.CmtDAO;
 import com.javaex.dao.PostDAO;
 import com.javaex.vo.CateVO;
 import com.javaex.vo.PostVO;
@@ -18,6 +18,10 @@ public class PostService {
 	PostDAO dao;
 	@Autowired
 	CateDAO cateDAO;
+	@Autowired
+	CmtDAO cmtDAO;
+	
+	
 	
 	public void addPost(PostVO vo) {
 		
@@ -42,6 +46,10 @@ public class PostService {
 	public ArrayList<PostVO> getPostList(PostVO vo){
 		
 		ArrayList<PostVO> list = (ArrayList<PostVO>)dao.getPostList(vo);
+		for(PostVO resultVO : list) {
+			String cmtCount = cmtDAO.getCmtCount(resultVO.getPostNo());
+			resultVO.setCmtCount(cmtCount);
+		}
 		/*System.out.println("포스트 서비스:" +list.get(0).toString());*/
 		return list;
 	}

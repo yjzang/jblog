@@ -7,12 +7,58 @@
 
 
 <insert id="insert" parameterType="cmtVO" >      
-
+	<selectKey keyProperty="cmtNo" resultType="string" order="BEFORE">  
+		select seq_comments_no.nextval FROM dual
+	 </selectKey>
 	<![CDATA[
 		insert into comments
-		values(seq_comments_no.nextval,#{postNo},#{userNo},#{cmtContent},sysdate)	
+		
+		values(#{cmtNo},#{postNo},#{userNo},#{cmtContent},sysdate)	
      ]]>
        
 </insert>
+
+
+<select id="getList" parameterType="String"  resultMap="resultMapList"> 
+	<![CDATA[
+		select cmtno,postno,userno,cmtcontent,regdate 
+		from comments
+		where postno=#{postNo}
+		order by regdate desc
+        ]]>
+</select>
+
+<select id="getCmt" parameterType="String"  resultMap="resultMapList"> 
+	<![CDATA[
+		select cmtno,postno,userno,cmtcontent,regdate 
+		from comments
+		where cmtno=#{cmtNo}
+		order by regdate desc
+        ]]>
+</select>
+
+<select id="getCmtCount" parameterType="String" resultType="String">
+
+	select count(*)
+	from comments
+	where postno=#{postNo}
+
+</select>
+
+<resultMap type="cmtVO" id="resultMapList">
+	<result column="cmtno" property="cmtNo"/>
+	<result column="postno" property="postNo"/>
+	<result column="userno" property="userNo"/>
+	<result column="cmtcontent" property="cmtContent"/>
+	<result column="regdate" property="regDate"/>
+</resultMap>
+
+<delete id="delete" parameterType="cmtVO">
+	<![CDATA[
+		delete 
+		from comments
+		where cmtno=#{cmtNo}
+	]]>
+</delete>
 
 </mapper>

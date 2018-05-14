@@ -25,7 +25,6 @@ public class PostController {
 	@RequestMapping(value="/admin/write/add",method=RequestMethod.POST)
 	public String addPost(@PathVariable("id") String id,@ModelAttribute PostVO vo) {
 
-		System.out.println("포스트 컨트롤러에서 찍어보는 아이디 "+ id);
 		service.addPost(vo);
 		
 		
@@ -38,8 +37,6 @@ public class PostController {
 	public List<PostVO> getPostList(@PathVariable("id") String id,
 						  @ModelAttribute PostVO vo) {
 
-		System.out.println("포스트 컨트롤러에서 찍어보는 아이디 "+ id);
-		System.out.println("포스트 컨트롤러에서 찍어보는 카테넘버 "+ vo.getCateNo());
 		List<PostVO> list= service.getPostList(vo);
 		
 		return list;
@@ -51,9 +48,6 @@ public class PostController {
 	public List<PostVO> getPost(@PathVariable("id") String id,
 						  @ModelAttribute PostVO postVO) {
 
-		String postNo = postVO.getPostNo();
-		System.out.println("포스트 컨트롤러에서 찍어보는 아이디 "+ id);
-		System.out.println("포스트 컨트롤러에서 찍어보는 포스트넘버 "+ postNo);
 		List<PostVO> list= service.getPost(postVO);
 		
 		return list;

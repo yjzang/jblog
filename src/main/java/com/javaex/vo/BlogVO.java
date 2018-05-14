@@ -20,9 +20,6 @@ public class BlogVO {
 
 
 
-	
-
-
 	public String getBlogtitle() {
 		return blogtitle;
 	}
